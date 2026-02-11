@@ -6,9 +6,9 @@
 <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/style.css">
 <title>애플로그인 적용시 자바서버에서 인증 확인</title>
-<!-- Begin Jekyll SEO tag v2.6.1 -->
+<!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>애플로그인 적용시 자바서버에서 인증 확인 | 따분한녀석의 고민</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="애플로그인 적용시 자바서버에서 인증 확인" />
 <meta name="author" content="ChoDaeyun" />
 <meta property="og:locale" content="en_US" />
@@ -19,8 +19,10 @@
 <meta property="og:site_name" content="따분한녀석의 고민" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-04-18T01:40:00+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="애플로그인 적용시 자바서버에서 인증 확인" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","headline":"애플로그인 적용시 자바서버에서 인증 확인","dateModified":"2020-04-18T01:40:00+09:00","datePublished":"2020-04-18T01:40:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/APPLE-SIGN-IN-JAVA/"},"url":"http://localhost:4000/posts/APPLE-SIGN-IN-JAVA/","author":{"@type":"Person","name":"ChoDaeyun"},"description":"자바에서 애플로그인 시 전달된 authorization code 값 인증","@context":"https://schema.org"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"ChoDaeyun"},"dateModified":"2020-04-18T01:40:00+09:00","datePublished":"2020-04-18T01:40:00+09:00","description":"자바에서 애플로그인 시 전달된 authorization code 값 인증","headline":"애플로그인 적용시 자바서버에서 인증 확인","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/APPLE-SIGN-IN-JAVA/"},"url":"http://localhost:4000/posts/APPLE-SIGN-IN-JAVA/"}</script>
 <!-- End Jekyll SEO tag -->
 </head>
 <body>
@@ -199,7 +201,7 @@ Apple Api URL : https://appleid.apple.com/auth/token</p>
 <span class="nt">&lt;/div&gt;</span>
 <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
-    <span class="nx">AppleID</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span>
+    <span class="nx">AppleID</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nf">init</span><span class="p">({</span>
         <span class="na">clientId</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">{CLIENT_ID}</span><span class="dl">'</span><span class="p">,</span>
         <span class="na">scope</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">name email</span><span class="dl">'</span><span class="p">,</span>
         <span class="na">redirectURI</span><span class="p">:</span> <span class="dl">'</span><span class="s1">{REDIRECT_URI}</span><span class="dl">'</span><span class="p">,</span>
