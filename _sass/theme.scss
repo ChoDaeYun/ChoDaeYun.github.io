@@ -3,14 +3,23 @@
 @import 'begin';
 @import 'syntax';
 
-$linkColor: #999;
+// 모아갤 캘린더 컬러 테마
+$primaryColor: #2F80ED;
+$accentColor: #56CCF2;
+$linkColor: #2F80ED;
+$textColor: #1F2937;
+$lightTextColor: #6B7280;
+$borderColor: #DCE8F5;
+$bgLight: #F6FAFE;
+$surfaceColor: #FFFFFF;
+
 $mobileW: 768px;
 $smallMobileW: 480px;
 $bigScreenW: 1600px;
 $leftWidth: 220px;
 
-$gray: #999;
-$lightGray: #eee;
+$gray: #666;
+$lightGray: #E1E8ED;
 
 *,*:before,*:after {
 	box-sizing: border-box;
@@ -18,9 +27,11 @@ $lightGray: #eee;
 
 body {
 	font-family: 'Nunito Sans', sans-serif;
-	@include fluidType(16px, 19px);
-	line-height: 1.55em;
+	@include fluidType(13px, 15px);
+	line-height: 1.65em;
 	margin: 0;
+	color: $textColor;
+	background-color: $bgLight;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
@@ -28,7 +39,7 @@ body {
 a {
 	color: $linkColor;
 	text-decoration: none;
-	transition: border-bottom 0.4s;
+	transition: color .2s ease, border-bottom .2s ease;
 	&:hover {
 		border-bottom: 0.5px solid $linkColor;
 	}
@@ -40,17 +51,22 @@ h1, h2, h3 {
 }
 
 h1 {
-	@include fluidType(36px, 48px);
+	@include fluidType(32px, 40px);
 }
 
 h2 {
-	font-weight: bold;
-	@include fluidType(28px, 32px);
+	font-weight: 600;
+	@include fluidType(24px, 28px);
+}
+
+h3 {
+	font-weight: 600;
+	@include fluidType(18px, 22px);
 }
 
 h4 {
 	font-weight: normal;
-	@include fluidType(18px, 20px);
+	@include fluidType(16px, 18px);
 }
 
 figcaption {
@@ -61,22 +77,26 @@ figcaption {
 
 header {
 	// background-size: cover;
-	padding: 120px 0;
+	padding: 20px 0 16px 0;
 	color: #fff;
 	overflow: hidden;
 	h2 {
 		font-weight: normal;
-		margin-top: 5px;
+		margin: 4px 0 0;
+		@include fluidType(12px, 14px);
+		opacity: .86;
 	}
 	h1 {
 		margin: 0;
+		@include fluidType(20px, 26px);
+		font-weight: 700;
 	}
 
 	.social {
 		overflow: hidden;
 		list-style-type: none;
 		padding: 0;
-		margin-top: 0;
+		margin: 4px 0 0;
 		li {
 			color: #fff;
 			float: left;
@@ -84,12 +104,36 @@ header {
 				&:first-child::before {
 					margin-left: 0;
 				}
-				@include fluidType(26px, 34px);
+				@include fluidType(16px, 20px);
 				transition: color .3s;
 				&:hover {
-					color: $gray;
+					color: rgba(#fff, .72);
 				}
 			}
+		}
+	}
+
+	.post-description {
+		color: rgba(255, 255, 255, .92);
+		font-weight: 400;
+		margin-top: 8px;
+		margin-bottom: 0;
+	}
+
+	.post-date {
+		color: rgba(255, 255, 255, .82);
+	}
+
+	.post-tags {
+		margin-top: 12px;
+
+		li {
+			background-color: rgba(255, 255, 255, .16);
+			border: 1px solid rgba(255, 255, 255, .28);
+			color: rgba(255, 255, 255, .94);
+			padding: 5px 10px;
+			border-radius: 999px;
+			@include fluidType(11px, 12px);
 		}
 	}
 }
@@ -103,7 +147,7 @@ header {
 //
 .container {
 	margin:0 150px;
-	max-width: 1200px;
+	max-width: 980px;
 
 	div.highlighter-rouge {
 		right: 150px;
@@ -151,25 +195,31 @@ header {
 }
 
 .post-title {
-	color: #222;
+	color: $textColor;
 	transition: color .3s ease;
-	margin: .1em 0;
+	margin: 0;
+	@include fluidType(16px, 19px);
+	font-weight: 600;
+	line-height: 1.35em;
 	&:hover {
-		color: $gray;
+		color: $primaryColor;
 		border-bottom: 0;
 	}
 }
 
 .post-description {
 	font-weight: normal;
-	color: #ddd;
-
+	color: $lightTextColor;
+	@include fluidType(13px, 14px);
 	margin-top:.5em;
-	margin-bottom: 1.3em;
+	margin-bottom: 1em;
+	line-height: 1.6em;
 }
 
 .post-date {
-	color: $gray;
+	color: $lightTextColor;
+	@include fluidType(11px, 12px);
+	white-space: nowrap;
 	.icon-calendar {
 		margin-right: 6px;
 	}
@@ -195,25 +245,53 @@ header {
 .posts {
 	list-style-type: none;
 	padding: 0;
+	margin-bottom: 42px;
 	>li {
-		margin-bottom: 30px;
-		padding-bottom: 20px;
+		margin-bottom: 12px;
+		padding: 16px 18px;
+		background-color: $surfaceColor;
+		border-radius: 10px;
+		border: 1px solid $borderColor;
+		box-shadow: 0 1px 2px rgba(31, 41, 55, .03);
+		transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+		&:hover {
+			transform: translateY(-1px);
+			box-shadow: 0 8px 22px rgba(47, 128, 237, .10);
+			border-color: rgba($primaryColor, .45);
+		}
 		&:not(:last-child) {
-			border-bottom: 1px solid $lightGray;
+			border-bottom: 1px solid $borderColor;
 		}
 	}
 }
 
 .posts, .post-container {
-	margin-top: 40px;
+	margin-top: 22px;
 }
 
 .post-meta {
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
+	align-items: flex-start;
+	gap: 16px;
 	a:hover {
 		border-bottom: none;
+	}
+}
+
+.post-link {
+	display: block;
+	min-width: 0;
+}
+
+.post {
+	color: #4B5563;
+	@include fluidType(12px, 13px);
+	line-height: 1.6em;
+	margin-top: 6px;
+
+	p {
+		margin: 0;
 	}
 }
 
@@ -225,13 +303,14 @@ header {
 
 .navbar {
 	position: absolute;
-	top: 0;
+	top: 12px;
 	right: 5vw;
 	a {
 		color: inherit;
 	}
 	ul {
 		list-style-type: none;
+		overflow: hidden;
 		li {
 			// background-color: #ff9f1c;
 			border: 1px solid #fff;
@@ -240,14 +319,49 @@ header {
 			&:not(:first-child){
 				border-left: 0;
 			}
-			padding: 10px 25px;
+			padding: 6px 14px;
 			// border-radius: 4px;
-			@include fluidType(15px, 17px);
+			@include fluidType(11px, 13px);
 			transition: background-color .3s ease-in;
 			&:hover {
 				background-color: rgba(#fff, 0.15);
 				cursor: pointer;
 			}
+		}
+	}
+}
+
+main {
+	padding: 6px 0 36px;
+}
+
+@media screen and (max-width: $mobileWidth) {
+	header {
+		padding: 18px 0 14px 0;
+	}
+
+	.post-meta {
+		display: block;
+	}
+
+	.post-date {
+		margin-top: 6px;
+	}
+
+	.posts {
+		>li {
+			padding: 15px;
+			margin-bottom: 12px;
+		}
+	}
+
+	.navbar {
+		position: static;
+		margin-bottom: 12px;
+
+		ul {
+			padding-left: 0;
+			margin: 0;
 		}
 	}
 }

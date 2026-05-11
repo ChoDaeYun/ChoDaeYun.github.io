@@ -13,12 +13,13 @@ layout: page
 			<div class="post-date"><i class="icon-calendar"></i>{{ post.date | date: date_format }}</div>
 		</div>
 		<div class="post">
-			{%- if site.show_excerpts -%}
-			{{ post.excerpt }}
+			{%- if post.description -%}
+			<p>{{ post.description }}</p>
+			{%- elsif site.show_excerpts -%}
+			{{ post.excerpt | strip_html | truncate: 120 }}
 			{%- endif -%}
 		</div>
 	</li>
 	{%- endfor -%}
 </ul>
 {%- endif -%}
-

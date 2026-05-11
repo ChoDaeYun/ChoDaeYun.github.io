@@ -234,10 +234,10 @@ Claude Pro를 결제하고 정확히 한 달. 이 여정을 돌아보면:
 3. [개발 환경 구축과 첫 번째 난관](/posts/MoaGal-03-Setup-Challenges/)
 4. [핵심 기능 구현하기](/posts/MoaGal-04-Core-Features/)
 5. **테스트와 배포 준비** (현재 글)
+6. [드디어 출시했다](/posts/MoaGal-06-Launch/)
 
 ---
 
 **업데이트 예정**
-- 모아갤 배포 후기
 - 첫 사용자 반응과 버그 수정기
 - Google Calendar 연동 개발기

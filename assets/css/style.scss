@@ -53,10 +53,14 @@
 {%- endif -%}
 // Textures
 .texture-black {
-    background-image: url('{{ site.baseurl }}/assets/textures/black.jpg');
+    background:
+        linear-gradient(135deg, rgba(47, 128, 237, .96), rgba(86, 204, 242, .92)),
+        url('{{ site.baseurl }}/assets/textures/blue.jpg');
+    background-size: cover;
+    background-position: center;
 
     h2 {
-        color: #999;
+        color: rgba(255, 255, 255, .86);
     }
 }
 
