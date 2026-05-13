@@ -365,3 +365,35 @@ main {
 		}
 	}
 }
+
+//
+// Markdown Table
+//
+.post-container {
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		margin: 1.5em 0;
+		@include fluidType(13px, 14px);
+
+		th, td {
+			padding: 10px 16px;
+			border: 1px solid $borderColor;
+			text-align: center;
+		}
+
+		th {
+			background-color: $bgLight;
+			font-weight: 600;
+			color: $textColor;
+		}
+
+		tr:nth-child(even) td {
+			background-color: #F9FBFE;
+		}
+
+		tr:hover td {
+			background-color: #EEF5FD;
+		}
+	}
+}
