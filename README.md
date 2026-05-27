@@ -122,6 +122,10 @@ bundle exec jekyll serve --port 4001
 - Claude와 함께하는 Flutter 앱 개발 여정
 - 프로젝트 시작부터 배포까지의 과정 기록
 
+### toonify-lab 프로젝트 (2026.05~)
+- Codex를 활용한 이미지 변환 서비스 프로젝트 정리
+- 고려한 부분, 선택한 것, 앞으로 고민해야 할 내용 기록
+
 ### 인프라 & DevOps
 - Kubernetes, CI/CD, 모니터링 관련 글
 
