@@ -1,23 +1,27 @@
 ---
 layout: post
 title:  "Redis 캐시 및 장애대응 - Spring Boot(Java)"
-description:  Reids 캐시 적용 및 장애대응 
+description:  Redis 캐시 적용 및 장애대응
 date:   2021-08-03 00:00:00 +000
 categories: Redis JAVA SpringBoot netflix-hystrix
 ---
-## 개요
-Java Spring Boot 환경에서 레디스 캐시 설정과 레디스 장애 발생시 대응의 위한 설정 
 
+## 개요
+
+Java Spring Boot 환경에서 Redis 캐시 설정과 Redis 장애 발생 시 대응을 위한 설정을 정리합니다.
 
 ## Spring Cache 어노테이션 종류
-|어노테이션|설명|
-|------|---|
-|@Cacheable| cache 등록 |
-|@CachePut| cache 갱신 |
-|@CacheEvict| cache 삭제 |
 
-## dependencies 추가
-org.springframework.boot 2.4.2 
+| 어노테이션 | 설명 |
+| --- | --- |
+| `@Cacheable` | cache 등록 |
+| `@CachePut` | cache 갱신 |
+| `@CacheEvict` | cache 삭제 |
+
+## Dependencies 추가
+
+Spring Boot 버전은 `2.4.2`를 기준으로 작성했습니다.
+
 ```gradle
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -25,14 +29,15 @@ dependencies {
 }
 ```
 
-## properties 추가
+## Properties 추가
 
 ```properties
 # cache
 spring.cache.type=redis
 ```
 
-## CacheConfig.java - 1분단위 캐시 설정 
+## CacheConfig.java - 1분 단위 캐시 설정
+
 ```java
 @Configuration
 public class CacheConfig extends CachingConfigurerSupport {
@@ -50,43 +55,44 @@ public class CacheConfig extends CachingConfigurerSupport {
         return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(redisConnectionFactory).cacheDefaults(redisCacheConfiguration).build();
     }
 }
-
 ```
 
-## 사용예시
+## 사용 예시
+
 ```java
-    
-    @Cacheable(value = "testCache",cacheManager="cacheManager")
-    public Map<String,Object> testCache(){
-            ...
-    }
+@Cacheable(value = "testCache",cacheManager="cacheManager")
+public Map<String,Object> testCache(){
+        ...
+}
 
-    // 저장된 캐시 정보 
-    // testCache::SimpleKey []
+// 저장된 캐시 정보
+// testCache::SimpleKey []
 
-    @Cacheable(value = "testCacheKey",key="#keyName",cacheManager="cacheManager")
-    public Map<String,Object> testCacheKey(String keyName){
-            ...
-    }
-    
-    // 저장된 캐시 정보 
-    // testCacheKey::keyName
+@Cacheable(value = "testCacheKey",key="#keyName",cacheManager="cacheManager")
+public Map<String,Object> testCacheKey(String keyName){
+        ...
+}
+
+// 저장된 캐시 정보
+// testCacheKey::keyName
 ```
 
-## 문제점 
-레디스 서버가 다운되는 경우 서비스 에러가 발생되어 원활한 서비스 지원이 불가능합니다. <br> 
-여러 검색내용에서는 로컬 스토리지와 레디스 두개를 다 사용하는 것을 권장하는 부분도 있지만 테스트 진행을 위해 <br>
-레디스 서버 장애 발생 시 오류가 발생하지 않고 바로 DB 조회를 할수 있도록 설정을 추가 하였습니다.
+## 문제점
 
-#장애대응 설정추가
+Redis 서버가 다운되는 경우 서비스 에러가 발생해 원활한 서비스 지원이 불가능합니다.
 
-## dependencies 추가
-```gradl
+여러 검색 내용에서는 로컬 스토리지와 Redis를 둘 다 사용하는 것을 권장하기도 합니다. 여기서는 테스트 진행을 위해 Redis 서버 장애 발생 시 오류가 발생하지 않고 바로 DB 조회를 할 수 있도록 설정을 추가했습니다.
+
+# 장애 대응 설정 추가
+
+## Dependencies 추가
+
+```gradle
 ext {
     set('springCloudVersion', "2020.0.2")
 }
 dependencies {
-    ...    
+    ...
     implementation group: 'org.springframework.session', name: 'spring-session-data-redis', version: '2.5.0'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix:2.2.8.RELEASE'
 }
@@ -97,13 +103,16 @@ dependencyManagement {
 }
 ```
 
-## properties 추가
+## Properties 추가
+
 ```properties
 spring.redis.timeout=3000
 spring.redis.connect-timeout=3000
 spring.redis.database=0
 ```
+
 ## RedisConfig.java
+
 ```java
 public class RedisConfig {
     @Bean
@@ -119,8 +128,8 @@ public class RedisConfig {
 }
 ```
 
-
 ## CacheConfig.java
+
 ```java
 @Configuration
 @EnableCaching(proxyTargetClass = true)
@@ -139,13 +148,15 @@ public class CacheConfig extends CachingConfigurerSupport{
     }
 }
 ```
+
 ### Netflix / Hystrix
-- https://github.com/Netflix/Hystrix 
-- 테스트 진행을 위해 아래의 내용만 우선 사용 
+
+- <https://github.com/Netflix/Hystrix>
+- 테스트 진행을 위해 아래 내용만 우선 사용했습니다.
 
 ## HystrixCache.java
-```java
 
+```java
 public class HystrixCache implements Cache {
 
     private final Cache delegate;
@@ -195,7 +206,9 @@ public class HystrixCache implements Cache {
     }
 }
 ```
+
 ## HystrixCacheEvictCommand.java
+
 ```java
 public class HystrixCacheEvictCommand extends HystrixCommand<Object> {
 
@@ -229,7 +242,9 @@ public class HystrixCacheEvictCommand extends HystrixCommand<Object> {
     }
 }
 ```
+
 ## HystrixCacheGetCommand.java
+
 ```java
 public class HystrixCacheGetCommand extends HystrixCommand<Cache.ValueWrapper> {
 
@@ -261,7 +276,9 @@ public class HystrixCacheGetCommand extends HystrixCommand<Cache.ValueWrapper> {
     }
 }
 ```
+
 ## HystrixCacheManager.java
+
 ```java
 public class HystrixCacheManager implements CacheManager {
 
@@ -283,7 +300,9 @@ public class HystrixCacheManager implements CacheManager {
     }
 }
 ```
+
 ## HystrixCachePutCommand.java
+
 ```java
 public class HystrixCachePutCommand extends HystrixCommand<Object> {
 
@@ -319,6 +338,8 @@ public class HystrixCachePutCommand extends HystrixCommand<Object> {
 }
 ```
 
-### 테스트 결과 
-Redis에 캐시 데이터 생성 확인 후 레디스 서버를 다운시킨 결과 DB조회로 대체하여 정상적으로 서비스 유지 확인 완료 
+### 테스트 결과
 
+Redis에 캐시 데이터가 생성되는 것을 확인한 뒤 Redis 서버를 다운시켰습니다.
+
+그 결과 DB 조회로 대체되어 서비스가 정상적으로 유지되는 것을 확인했습니다.

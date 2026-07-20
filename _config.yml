@@ -1,4 +1,4 @@
-title: 따분한녀석의 고민
+title: 따녀의 생각정리소
 author: ChoDaeyun
 email: chody0116@gmail.com
 description: > # this means to ignore newlines until "show_exerpts:"
@@ -13,7 +13,7 @@ sass:
 
 permalink: /posts/:title/
 texture:
-  title: Daeyun
+  title: 따녀
   tagline: Developer
   date_format: "%b %-d, %Y"
   style: black

@@ -1,36 +1,40 @@
 ---
 layout: post
 title:  "Redis 기본설정 - Spring Boot(Java)"
-description:  Reids 설정 
+description:  Redis 설정
 date:   2021-08-01 00:00:00 +000
 categories: Redis JAVA SpringBoot Lettuce
 ---
 
-## 개요 
-Java Spring Boot 레디스 기본 설정에 대한 부분 및 간단한 사용법 <br>
-Lettuce 사용 ( spring-boot-starter-data-redis 에서 기본 지원 별도 의존성 추가가 필요 없습니다.)
+## 개요
 
-## dependencies
-org.springframework.boot 2.4.2 
+Java Spring Boot 환경에서 Redis 기본 설정과 간단한 사용법을 정리합니다.
+
+Lettuce를 사용했습니다. `spring-boot-starter-data-redis`에서 기본 지원하므로 별도 의존성 추가는 필요 없습니다.
+
+## Dependencies
+
+Spring Boot 버전은 `2.4.2`를 기준으로 작성했습니다.
+
 ```gradle
-
 dependencies {
-...
+    ...
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    
 }
 ```
-## Properties - 레디스 기본 설정 정보 입력 
+
+## Properties - Redis 기본 설정 정보 입력
+
 ```properties
 spring.redis.port=6379
-spring.redis.host= host
-spring.redis.password= password
+spring.redis.host=host
+spring.redis.password=password
 ```
 
-## RedisConfig.java - 레디스 기본설정  
-```java
+## RedisConfig.java - Redis 기본 설정
 
+```java
 @Configuration
 public class RedisConfig {
     @Value("${spring.redis.host}")
@@ -49,11 +53,11 @@ public class RedisConfig {
         redisStandaloneConfiguration = new RedisStandaloneConfiguration();
         redisStandaloneConfiguration.setHostName(redisHost);
         redisStandaloneConfiguration.setPort(redisPort);
-        redisStandaloneConfiguration.setPassword(redisPassword);  // elasticache 의 경우 비밀번호 설정이 없으므로 미사용  
+        redisStandaloneConfiguration.setPassword(redisPassword);  // elasticache 의 경우 비밀번호 설정이 없으므로 미사용
         lettuceConnectionFactory = new LettuceConnectionFactory(redisStandaloneConfiguration);
         return lettuceConnectionFactory;
     }
-    
+
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
@@ -62,23 +66,22 @@ public class RedisConfig {
         redisTemplate.setValueSerializer(new StringRedisSerializer());
         return redisTemplate;
     }
-
 }
-    
 ```
 
-## 사용예시 
+## 사용 예시
+
 ```java
 @RequiredArgsConstructor
-public class ... { 
+public class ... {
 
     private final RedisTemplate redisTemplate;
-    
+
     // 데이터 저장
     public ... testRedisSet(){
-            ...
+        ...
         ValueOperations<String, Object> vop = redisTemplate.opsForValue();
-            vop.set("key","value",1,Timeunit.MINUTES)  // 만료시간 1분뒤  key 에 대한 value 데이터 레디스에 기록  
+        vop.set("key","value",1,Timeunit.MINUTES)  // 만료시간 1분 뒤 key에 대한 value 데이터를 Redis에 기록
         ...
     }
 
@@ -86,21 +89,20 @@ public class ... {
     public ... testRedisGet(){
         ...
         ValueOperations<String, Object> vop = redisTemplate.opsForValue();
-        String data = (String) vop.get("key"); // redisTemplate.setValueSerializer(new StringRedisSerializer()); 저장값을 String 으로 해놓았기 때문에 받을때도 문자열로 받도록 처리 
+        String data = (String) vop.get("key"); // redisTemplate.setValueSerializer(new StringRedisSerializer()); 저장값을 String으로 해놓았기 때문에 받을 때도 문자열로 받도록 처리
         ...
     }
-    
+
     // 삭제
     public ... testRedisDelete(){
-        redisTemplate.delete("key");    
+        redisTemplate.delete("key");
     }
-        
 }
 ```
 
-#### 설정한 레디스는 어디에 사용할 예정인가?
-- spring boot security  ( public Authentication getAuthentication(String token) 인증정보 조회시 redis 데이터 선조회 )
-- Cache 서비스 
-- Redis pub/sub 이용한 영상 콜백 처리 
-- Email , Mobile 같은 인증 처리시 
+## 설정한 Redis는 어디에 사용할 예정인가?
 
+- Spring Boot Security: `public Authentication getAuthentication(String token)` 인증정보 조회 시 Redis 데이터 선조회
+- Cache 서비스
+- Redis pub/sub을 이용한 영상 콜백 처리
+- Email, Mobile 같은 인증 처리
