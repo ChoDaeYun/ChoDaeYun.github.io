@@ -28,6 +28,52 @@ Kubernetes 클러스터 배포
 Grafana 모니터링
 ```
 
+## Kubernetes 설정을 별도로 관리하는 방식
+
+GitHub Actions와 ArgoCD를 같이 사용할 때 중요한 부분은 애플리케이션 코드와 Kubernetes 배포 설정을 분리해서 관리하는 것이다.
+
+서비스 코드는 각 애플리케이션 저장소에서 관리하고, Kubernetes manifest와 ArgoCD Application 설정은 별도의 `k8s` 또는 `k8s-manifests` 저장소/폴더에서 관리한다. 이 저장소에는 Deployment, Service, Ingress, ConfigMap, Secret 참조, ArgoCD Application 같은 배포 기준이 들어간다.
+
+실제 서비스별 상세 설정은 외부에 노출되면 안 되므로 여기서는 일반화된 구조만 적는다.
+
+```text
+k8s/
+  apps/
+    service-a/
+      deployment.yaml
+      service.yaml
+      ingress.yaml
+      kustomization.yaml
+    service-b/
+      deployment.yaml
+      service.yaml
+      ingress.yaml
+      kustomization.yaml
+  argocd/
+    applications/
+      service-a.yaml
+      service-b.yaml
+  environments/
+    dev/
+    prod/
+```
+
+이 방식의 핵심은 **클러스터 상태를 Git으로 선언하고, ArgoCD가 Git을 기준으로 클러스터를 맞추게 하는 것**이다.
+
+새 서버나 새 서비스를 추가할 때도 클러스터에 직접 접속해서 수동으로 리소스를 만들기보다, `k8s` 설정에 필요한 manifest와 ArgoCD Application을 추가한다. 변경사항이 Git에 커밋되면 ArgoCD가 이를 감지하고 배포한다.
+
+이렇게 관리하면 다음 장점이 있다.
+
+- 배포 설정 변경 이력이 Git에 남는다.
+- 새 서버/서비스 추가 작업을 코드 리뷰 대상으로 만들 수 있다.
+- 운영 환경에서 누가 어떤 설정을 바꿨는지 추적할 수 있다.
+- 장애 시 이전 manifest로 되돌리기 쉽다.
+- ArgoCD 대시보드에서 실제 클러스터 상태와 Git 상태의 차이를 확인할 수 있다.
+
+주의할 점도 있다.
+
+`k8s` 폴더에는 서비스 이름, 도메인, 리소스 제한, 환경 변수 이름, 외부 연동 정보 등 민감한 단서가 들어갈 수 있다. 블로그나 공개 문서에는 실제 구조를 그대로 올리지 않고, 위처럼 일반화된 예시만 남기는 것이 좋다. Secret 값은 Git에 직접 넣지 않고 Sealed Secrets, External Secrets, SOPS 같은 별도 방식을 검토해야 한다.
+
 ## GitHub Actions (CI) 설정
 
 ### 1. Workflow 파일 생성
@@ -320,14 +366,21 @@ git push origin main
 ### 2. GitHub Actions 자동 실행
 - 빌드 및 테스트
 - Docker 이미지 생성 및 푸시
-- Kubernetes manifest 업데이트
+- Kubernetes manifest 또는 image tag 업데이트
+- 별도 `k8s` 설정 저장소에 변경사항 커밋
 
 ### 3. ArgoCD 자동 동기화
 - Git Repository 변경 감지
 - Kubernetes 클러스터에 자동 배포
 - Health Check 및 Sync Status 확인
 
-### 4. Grafana 모니터링
+### 4. 새 서버/서비스 추가
+- `k8s` 설정 저장소에 manifest 추가
+- ArgoCD Application 또는 ApplicationSet 설정 추가
+- Git 변경사항 리뷰 후 merge
+- ArgoCD가 새 리소스를 동기화
+
+### 5. Grafana 모니터링
 - 실시간 메트릭 확인
 - 로그 조회 및 분석
 - 알림 수신 (이상 발생 시)
@@ -379,6 +432,8 @@ kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 909
 - ArgoCD 비밀번호 변경 필수
 - GitHub Token은 최소 권한만 부여
 - Grafana는 인증 설정 필수
+- 공개 문서에는 실제 `k8s` 폴더의 서비스명, 도메인, 리소스 값, 내부 엔드포인트를 그대로 노출하지 않기
+- Secret 값은 manifest에 직접 넣지 않고 별도 Secret 관리 방식을 사용
 
 ### 리소스 관리
 - Prometheus retention 기간 적절히 설정 (디스크 사용량)
@@ -397,4 +452,3 @@ argocd app get my-app -o yaml > my-app-backup.yaml
 ## 마무리
 GitHub Actions와 ArgoCD를 활용하면 코드 커밋부터 배포까지 완전 자동화된 파이프라인을 구축할 수 있습니다.<br>
 Grafana를 통해 실시간 모니터링과 로그 분석이 가능하여 안정적인 서비스 운영이 가능합니다.
-
