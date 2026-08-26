@@ -5,6 +5,9 @@
 		{%- if site.texture.social_links.github -%}
 			<a href="https://github.com/{{ site.texture.social_links.github }}"><li><i class="icon-github-circled"></i></li></a>
 		{%- endif -%}
+		{%- if site.email -%}
+			<a href="mailto:{{ site.email }}" aria-label="{{ site.email }} 이메일 보내기" title="{{ site.email }}"><li><i class="icon-email"></i></li></a>
+		{%- endif -%}
 		{%- if site.texture.social_links.linkedIn -%}
 			<a href="https://linkedin.com/{{ site.texture.social_links.linkedIn }}"><li><i class="icon-linkedin-squared"></i></li></a>
 		{%- endif -%}

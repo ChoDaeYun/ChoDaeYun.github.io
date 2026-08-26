@@ -1,8 +1,10 @@
 title: 따녀의 생각정리소
 author: ChoDaeyun
 email: chody0116@gmail.com
+url: https://chodaeyun.github.io
+lang: ko
 description: > # this means to ignore newlines until "show_exerpts:"
-   이런거 참 안어울리는 개발자 
+   개발자 따녀의 기술 블로그. 백엔드, 검색엔진, 데이터베이스, 클라우드와 개인 프로젝트 기록을 정리합니다.
 show_excerpts: true # set to true to show excerpts on the homepage
 baseurl: 
 

@@ -57,5 +57,9 @@
  
 .icon-calendar:before { content: '\e800'; } /* '' */
 .icon-github-circled:before { content: '\f09b'; } /* '' */
+.icon-email:before {
+  content: '\2709';
+  font-family: sans-serif;
+}
 .icon-twitter-squared:before { content: '\f304'; } /* '' */
 .icon-linkedin-squared:before { content: '\f30c'; } /* '' */
